@@ -23,6 +23,9 @@ abstract class LibraryDAO {
     @Query("SELECT * FROM `library-table`")
     abstract fun getAllLibrariesWithBooks(): Flow<List<LibraryWithBooks>>
 
+    @Query("SELECT * FROM `book-table`")
+    abstract fun getAllBooks(): Flow<List<Book>>
+
     @Query("DELETE FROM `library-table`")
     abstract fun deleteAllLibraries()
 

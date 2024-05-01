@@ -21,6 +21,10 @@ class LibraryRepository @Inject constructor(private val libraryDao: LibraryDAO) 
         return libraryDao.getAllLibrariesWithBooks()
     }
 
+    fun getAllBooks(): Flow<List<Book>> {
+        return libraryDao.getAllBooks()
+    }
+
     fun deleteAllLibraries() {
         libraryDao.deleteAllLibraries()
     }

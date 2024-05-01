@@ -21,6 +21,7 @@ import com.kong.whereismyebook.di.AppEntryPoint
 import com.kong.whereismyebook.ui.theme.WhereIsMyEbookTheme
 import com.kong.whereismyebook.util.notification.handler.NotificationHandlerRegistry
 import com.kong.whereismyebook.util.notification.NotificationListener
+import com.kong.whereismyebook.view.MainView
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.HiltAndroidApp
@@ -38,7 +39,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Text(text = "Hi")
+                    MainView()
                 }
             }
         }
