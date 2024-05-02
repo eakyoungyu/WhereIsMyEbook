@@ -31,4 +31,7 @@ abstract class LibraryDAO {
 
     @Query("SELECT * FROM `library-table` WHERE packageName=:packageName")
     abstract fun searchLibraryByPackageName(packageName: String): Flow<Library>
+
+    @Delete
+    abstract suspend fun deleteBook(book: Book)
 }
