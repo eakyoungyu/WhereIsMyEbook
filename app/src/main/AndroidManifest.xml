@@ -4,6 +4,7 @@
     <queries>
         <package android:name="kr.co.aladin.ebook" />
         <package android:name="com.kyobo.ebook.common.b2c" />
+        <package android:name="com.yes24.ebook.fourth"/>
     </queries>
 
     <application

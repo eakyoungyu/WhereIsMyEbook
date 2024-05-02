@@ -40,6 +40,19 @@ abstract class NotificationHandler(
 
     }
     abstract fun parseBookName(title: String?, text: String?): String?
+
+    fun parseBookNameFromAngleBrackets(target: String): String? {
+        val start = target.indexOf('<') + 1
+        val end = target.lastIndexOf('>')
+
+        if (start != 0 && end != -1 && start < end) {
+            val bookName = target.substring(start, end)
+            Log.d(TAG, "Save Book $bookName")
+            return bookName
+        }
+        return null
+    }
+
     private suspend fun saveBook(bookName: String?) {
         Log.d(TAG, "Save Book -E: $bookName, $packageName")
         if (bookName != null) {
