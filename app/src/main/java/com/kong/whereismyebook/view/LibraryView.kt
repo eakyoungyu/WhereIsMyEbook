@@ -56,7 +56,6 @@ fun LibraryView() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LibraryItem(library: LibraryWithBooks, viewModel: LibraryViewModel) {
     val context = LocalContext.current
@@ -95,49 +94,63 @@ fun LibraryItem(library: LibraryWithBooks, viewModel: LibraryViewModel) {
 
         library.books.forEach { book ->
             key (book.id) {
-                val dismissState = rememberDismissState(
-                    confirmValueChange = {
-                        if (it == DismissValue.DismissedToStart) {
-                            viewModel.deleteBook(book)
-                        }
-                        true
-                    }
-                )
-
-                SwipeToDismiss(
-                    state = dismissState,
-                    directions = setOf(DismissDirection.EndToStart),
-                    background = {
-                        val color = when (dismissState.targetValue) {
-                            DismissValue.DismissedToStart -> MaterialTheme.colorScheme.secondary
-                            else -> Color.Transparent
-                        }
-                        Box(modifier = Modifier
-                            .fillMaxWidth()
-                            .background(color),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete",
-                                tint = MaterialTheme.colorScheme.background
-                            )
-                        }
-                    },
-                    dismissContent = {
-                        BookItem(book = book)
-                    }
-                )
+                DismissibleItem(book = book, viewModel = viewModel)
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookItem(book: Book) {
+fun DismissibleItem(book: Book, viewModel: LibraryViewModel) {
+    val dismissState = rememberDismissState(
+        confirmValueChange = {
+            if (it == DismissValue.DismissedToStart) {
+                viewModel.deleteBook(book)
+            }
+            true
+        },
+    )
+
+    val backgroundColor = when (dismissState.targetValue) {
+        DismissValue.DismissedToStart -> MaterialTheme.colorScheme.secondary
+        else -> Color.Transparent
+    }
+    val textColor = when (dismissState.targetValue) {
+        DismissValue.DismissedToStart -> Color.Transparent
+        else -> MaterialTheme.colorScheme.onBackground
+    }
+
+    SwipeToDismiss(
+        state = dismissState,
+        directions = setOf(DismissDirection.EndToStart),
+        background = {
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .background(backgroundColor),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete",
+                    tint = MaterialTheme.colorScheme.background
+                )
+            }
+        },
+        dismissContent = {
+            BookItem(book = book, textColor)
+        }
+    )
+}
+
+@Composable
+fun BookItem(book: Book, color: Color) {
     Text(
         text = book.name,
-        modifier = Modifier.padding(bottom = 16.dp).fillMaxWidth(),
-        style = MaterialTheme.typography.bodyLarge
+        modifier = Modifier
+            .padding(bottom = 16.dp)
+            .fillMaxWidth(),
+        style = MaterialTheme.typography.bodyLarge,
+        color = color
     )
 }
