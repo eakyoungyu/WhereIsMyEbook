@@ -6,6 +6,7 @@ import com.kong.whereismyebook.util.notification.handler.CremaYes24NotificationH
 import com.kong.whereismyebook.util.notification.handler.KyoboEBookNotificationHandler
 import com.kong.whereismyebook.util.notification.handler.NotificationHandler
 import com.kong.whereismyebook.util.notification.handler.NotificationHandlerFactory
+import com.kong.whereismyebook.util.notification.handler.RidiNotificationHandler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,15 +28,21 @@ object NotificationModule {
         CremaYes24NotificationHandler(libraryRepository)
 
     @Provides
+    fun provideRidiHandler(libraryRepository: LibraryRepository): RidiNotificationHandler =
+        RidiNotificationHandler(libraryRepository)
+
+    @Provides
     fun provideNotificationHandlerFactory(
         kyoboHandler: KyoboEBookNotificationHandler,
         aladinHandler: AladinEBookNotificationHandler,
-        cremaYes24Handler: CremaYes24NotificationHandler
+        cremaYes24Handler: CremaYes24NotificationHandler,
+        ridiHandler: RidiNotificationHandler
     ): NotificationHandlerFactory = object : NotificationHandlerFactory {
         private val handlers = listOf(
             kyoboHandler,
             aladinHandler,
-            cremaYes24Handler
+            cremaYes24Handler,
+            ridiHandler,
         ).associateBy { it.packageName }
 
         override fun create(packageName: String): NotificationHandler? = handlers[packageName]
