@@ -15,14 +15,7 @@ class NotificationListener: NotificationListenerService() {
             val packageName = notification.packageName
             packageName?.let {
                 Log.d(TAG, "onNotificationPosted $packageName")
-                NotificationHandlerRegistry.getHandler(packageName)?.let {
-                    notification.notification?.extras?.run {
-                        val title = getString(Notification.EXTRA_TITLE)
-                        val text = getString(Notification.EXTRA_TEXT)
-                        it.handle(title, text)
-                    }
-
-                }
+                NotificationHandlerRegistry.getHandler(packageName)?.handle(notification.notification)
             }
         }
 
@@ -37,6 +30,16 @@ class NotificationListener: NotificationListenerService() {
         Log.i("NotificationListener", "Notification from package: $packageName ${getAppName(packageName)}")
         Log.i("NotificationListener", "Title: $title")
         Log.i("NotificationListener", "Content: $text")
+
+//        printAllExtras(notification)
+    }
+
+    private fun printAllExtras(notification: Notification?) {
+        val extras = notification?.extras
+        extras?.keySet()?.forEach { key ->
+            val value = extras.get(key)
+            Log.i("NotificationListener", "Extra: $key = $value")
+        }
     }
 
     private fun getAppName(packageName: String?): String? {

@@ -1,5 +1,6 @@
 package com.kong.whereismyebook.util.notification.handler
 
+import android.app.Notification
 import android.util.Log
 import com.kong.whereismyebook.data.repository.LibraryRepository
 import com.kong.whereismyebook.model.Book
@@ -30,16 +31,14 @@ abstract class NotificationHandler(
     abstract val appName: String
     protected val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-    fun handle(title: String?, text: String?) {
+    fun handle(notification: Notification?) {
         applicationScope.launch {
             saveLibrary()
-            val bookName = parseBookName(title, text)
+            val bookName = parseBookName(notification)
             saveBook(bookName)
-
         }
-
     }
-    abstract fun parseBookName(title: String?, text: String?): String?
+    abstract fun parseBookName(notification: Notification?): String?
 
     fun parseBookNameFromAngleBrackets(target: String): String? {
         val start = target.indexOf('<') + 1

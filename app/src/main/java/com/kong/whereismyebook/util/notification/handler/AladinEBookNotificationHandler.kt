@@ -1,5 +1,6 @@
 package com.kong.whereismyebook.util.notification.handler
 
+import android.app.Notification
 import android.service.notification.StatusBarNotification
 import android.util.Log
 import com.kong.whereismyebook.data.repository.LibraryRepository
@@ -14,12 +15,18 @@ class AladinEBookNotificationHandler @Inject constructor(
     override val appName: String
         get() = "알라딘 ebook"
 
-    override fun parseBookName(title: String?, text: String?): String? {
-        if (title?.contains("다운로드 완료") == true) {
-            text?.let {
-                return parseBookNameFromAngleBrackets(it)
+    override fun parseBookName(notification: Notification?): String? {
+        notification?.extras?.run {
+            val title = getString(Notification.EXTRA_TITLE)
+            val text = getString(Notification.EXTRA_TEXT)
+
+            if (title?.contains("다운로드 완료") == true) {
+                text?.let {
+                    return parseBookNameFromAngleBrackets(it)
+                }
             }
         }
+
         return null
     }
 }
