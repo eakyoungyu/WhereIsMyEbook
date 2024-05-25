@@ -33,6 +33,10 @@ class LibraryRepository @Inject constructor(private val libraryDao: LibraryDAO) 
         return libraryDao.searchLibraryByPackageName(packageName)
     }
 
+    fun searchBookFromLibrary(packageName: String, bookName: String): Flow<Book> {
+        return libraryDao.searchBookFromLibrary(packageName, bookName)
+    }
+
     suspend fun deleteBook(book: Book) {
         libraryDao.deleteBook(book)
     }

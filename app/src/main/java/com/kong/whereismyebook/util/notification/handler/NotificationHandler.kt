@@ -55,8 +55,10 @@ abstract class NotificationHandler(
     private suspend fun saveBook(bookName: String?) {
         Log.d(TAG, "Save Book -E: $bookName, $packageName")
         if (bookName != null) {
-            libraryRepository.addBook(Book(name = bookName, libraryPackageName = packageName))
-            Log.d(TAG, "Save Book -X: $bookName, $packageName")
+            if (libraryRepository.searchBookFromLibrary(packageName, bookName).firstOrNull() == null) {
+                libraryRepository.addBook(Book(name = bookName, libraryPackageName = packageName))
+                Log.d(TAG, "Save Book -X: $bookName, $packageName")
+            }
         }
     }
 

@@ -6,6 +6,7 @@
         <package android:name="com.kyobo.ebook.common.b2c" />
         <package android:name="com.yes24.ebook.fourth"/>
         <package android:name="com.initialcoms.ridi"/>
+        <package android:name="kr.co.kyobobook.KEL"/>
     </queries>
 
     <application
