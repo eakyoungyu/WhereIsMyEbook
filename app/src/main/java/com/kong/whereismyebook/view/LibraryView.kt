@@ -1,10 +1,9 @@
 package com.kong.whereismyebook.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,14 +12,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.key
@@ -88,7 +82,8 @@ fun LibraryItem(library: LibraryWithBooks, viewModel: LibraryViewModel) {
             Text(
                 text = library.library.name,
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(start = 16.dp)
+                modifier = Modifier
+                    .padding(start = 16.dp)
                     .weight(1f)
             )
             Icon(
@@ -100,63 +95,33 @@ fun LibraryItem(library: LibraryWithBooks, viewModel: LibraryViewModel) {
 
         library.books.forEach { book ->
             key (book.id) {
-                DismissibleItem(book = book, viewModel = viewModel)
+                BookItem(book = book, viewModel = viewModel)
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun DismissibleItem(book: Book, viewModel: LibraryViewModel) {
-    val dismissState = rememberDismissState(
-        confirmValueChange = {
-            if (it == DismissValue.DismissedToStart) {
+fun BookItem(book: Book, viewModel: LibraryViewModel) {
+    Row (
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = book.name,
+            modifier = Modifier
+                .padding(end = 16.dp)
+                .weight(1f),
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        Icon(
+            imageVector = Icons.Default.Delete,
+            contentDescription = "Delete Book",
+            modifier = Modifier.clickable {
                 viewModel.deleteBook(book)
             }
-            true
-        },
-    )
-
-    val backgroundColor = when (dismissState.targetValue) {
-        DismissValue.DismissedToStart -> MaterialTheme.colorScheme.secondary
-        else -> Color.Transparent
+        )
     }
-    val textColor = when (dismissState.targetValue) {
-        DismissValue.DismissedToStart -> Color.Transparent
-        else -> MaterialTheme.colorScheme.onBackground
-    }
-
-    SwipeToDismiss(
-        state = dismissState,
-        directions = setOf(DismissDirection.EndToStart),
-        background = {
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .background(backgroundColor),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete",
-                    tint = MaterialTheme.colorScheme.background
-                )
-            }
-        },
-        dismissContent = {
-            BookItem(book = book, textColor)
-        }
-    )
-}
-
-@Composable
-fun BookItem(book: Book, color: Color) {
-    Text(
-        text = book.name,
-        modifier = Modifier
-            .padding(bottom = 16.dp)
-            .fillMaxWidth(),
-        style = MaterialTheme.typography.bodyLarge,
-        color = color
-    )
+    Spacer(modifier = Modifier.padding(bottom = 16.dp))
 }
