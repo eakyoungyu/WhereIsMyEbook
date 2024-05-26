@@ -12,11 +12,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,10 +38,18 @@ import com.kong.whereismyebook.viewmodel.LibraryViewModel
 fun LibraryView() {
     val viewModel = hiltViewModel<LibraryViewModel>()
     val libraries = viewModel.getAllLibraryWithBooks.collectAsState(initial = listOf())
+    val searchQuery by viewModel.searchQuery.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
+        SearchBar(
+            query = searchQuery,
+            onQueryChange = { newQuery ->
+                viewModel.updateSearchQuery(newQuery)
+            }
+        )
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -49,6 +61,32 @@ fun LibraryView() {
             }
         }
     }
+}
+
+@Composable
+fun SearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit,
+) {
+    TextField(
+        value = query,
+        onValueChange = onQueryChange,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        placeholder = { Text("책 찾기") },
+        singleLine = true,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search Icon"
+            )
+        },
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.background,
+            unfocusedContainerColor = MaterialTheme.colorScheme.background
+        )
+    )
 }
 
 @Composable
